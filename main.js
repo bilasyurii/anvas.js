@@ -1,0 +1,66 @@
+import Engine from './core/engine.js';
+import Group from './core/game-objects/group.js';
+import Rectangle from './core/game-objects/rectangle.js';
+import Math2 from './core/utils/math2.js';
+
+function preload(loader) {
+  loader.loadImage('test', 'assets/test.png');
+}
+
+const engine = new Engine()
+  .setCanvasId('canvas')
+  .setBodyColor('#222222')
+  .setCanvasColor('#000000')
+  .setPreloader(preload)
+  .start();
+
+const group = new Group();
+const rect = new Rectangle();
+
+group.position.set(200);
+rect.x = 100;
+rect.degrees = 15;
+rect.pivot.set(50, 50);
+
+rect.localTransform.flipX();
+
+engine.time.events.loop(10, () => {
+  rect.rotation += 0.01;
+  rect.scaleX = Math.sin(engine.elapsed * 5) * 0.25 + 0.75;
+});
+
+group.add(rect);
+
+engine.add(group);
+
+const event = engine.time.events.loop(50, (arg) => {
+  console.log(arg);
+}, undefined, 5);
+
+engine.time.events.once(500, () => {
+  const sprite = engine.create.sprite('test');
+
+  group.add(sprite);
+
+  event.cancel();
+
+  const bmd = engine.create.bitmap(100, 100);
+  const sprite2 = engine.create.sprite(bmd);
+
+  sprite2.pivot.set(50);
+
+  group.add(sprite2);
+
+  const ctx = bmd.ctx;
+
+  ctx.arc(50, 50, 30, 0, Math2.PI2);
+  ctx.fillStyle = 'green';
+  ctx.fill();
+
+  ctx.fillStyle = 'cyan';
+  ctx.fillRect(50, 45, 45, 10);
+
+  engine.time.events.loop(10, () => {
+    sprite2.rotation += 0.05;
+  });
+});
