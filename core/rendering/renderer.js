@@ -4,7 +4,7 @@ export default class Renderer {
   constructor(engine) {
     this.engine = engine;
 
-    this._root = engine.rootObject;
+    this._root = engine.root;
     this._ctx = engine.canvas.getContext('2d');
     this._width = SU.width;
     this._height = SU.height;

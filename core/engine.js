@@ -1,7 +1,7 @@
 import Debug from './debug/debug.js';
 import Renderer from './rendering/renderer.js';
 import SU from './screen/screen-utils.js';
-import Root from './game-objects/root.js';
+import Group from './game-objects/group.js';
 import Cache from './loading/cache.js';
 import Loader from './loading/loader.js';
 import TextureManager from './rendering/texture-manager.js';
@@ -17,8 +17,7 @@ export default class Engine {
     this.textures = null;
     this.create = null;
     this.time = null;
-
-    this.rootObject = new Root(this);
+    this.root = null;
 
     this.elapsed = 0;
     this.elapsedMS = 0;
@@ -77,7 +76,8 @@ export default class Engine {
     this._configureHtml();
     this._configureBody();
     this._configureCanvas();
-    
+
+    this._initRoot();
     this._initCanvasPool();
     this._initScreenUtils();
     this._initTimerManager();
@@ -95,7 +95,7 @@ export default class Engine {
   }
 
   add(gameObject) {
-    this.rootObject.add(gameObject);
+    this.root.add(gameObject);
   }
 
   _configureHtml() {
@@ -134,6 +134,12 @@ export default class Engine {
     Debug.defined(color);
 
     canvas.style.backgroundColor = color;
+  }
+
+  _initRoot() {
+    const root = this.root = new Group();
+
+    root.engine = this;
   }
 
   _initCanvasPool() {
@@ -218,7 +224,7 @@ export default class Engine {
   }
 
   _step() {
-    this.rootObject.fixedUpdate();
+    this.root.fixedUpdate();
   }
 
   _preload() {

@@ -1,5 +1,5 @@
 import CanvasPool from './canvas-pool.js';
-import Rect from '../utils/rect.js';
+import Rect from '../geom/rect.js';
 
 export default class Texture {
   constructor(manager, name, source, width, height) {

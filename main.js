@@ -1,6 +1,6 @@
 import Engine from './core/engine.js';
 import Group from './core/game-objects/group.js';
-import Rectangle from './core/game-objects/rectangle.js';
+import Renderable from './core/rendering/renderable.js';
 import Math2 from './core/utils/math2.js';
 
 function preload(loader) {
@@ -13,6 +13,21 @@ const engine = new Engine()
   .setCanvasColor('#000000')
   .setPreloader(preload)
   .start();
+
+class Rectangle extends Renderable {
+  constructor() {
+    super();
+  }
+
+  render(ctx) {
+    ctx.fillStyle = 'yellow';
+    ctx.fillRect(0, 0, 100, 100);
+  }
+
+  fixedUpdate() {
+    // console.log(this.engine.dt);
+  }
+}
 
 const group = new Group();
 const rect = new Rectangle();

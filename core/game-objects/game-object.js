@@ -1,6 +1,6 @@
 import Math2 from '../utils/math2.js';
-import ObservableVec2 from '../utils/observable-vec2.js';
-import Transform from '../utils/transform.js';
+import ObservableVec2 from '../geom/observable-vec2.js';
+import Transform from '../geom/transform.js';
 
 export default class GameObject {
   constructor() {
@@ -8,6 +8,9 @@ export default class GameObject {
 
     this._local = new Transform();
     this._world = new Transform();
+
+    this._localBounds = null;
+    this._bounds = null;
 
     this._parent = null;
 

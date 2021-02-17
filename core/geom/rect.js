@@ -1,4 +1,4 @@
-import Math2 from './math2.js';
+import Math2 from '../utils/math2.js';
 
 export default class Rect {
   constructor(x, y, w, h) {

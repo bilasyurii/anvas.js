@@ -1,4 +1,4 @@
-import Math2 from './math2.js';
+import Math2 from '../utils/math2.js';
 
 export default class Vec2 {
   constructor(x, y) {
