@@ -1,18 +1,20 @@
+import Debug from '../debug/debug.js';
 import Math2 from '../utils/math2.js';
 import ObservableVec2 from '../geom/observable-vec2.js';
 import Transform from '../geom/transform.js';
+import Bounds from '../geom/bounds.js';
 
 export default class GameObject {
   constructor() {
     this.engine = null;
 
+    this._parent = null;
+
     this._local = new Transform();
     this._world = new Transform();
 
-    this._localBounds = null;
-    this._bounds = null;
-
-    this._parent = null;
+    this._localBounds = new Bounds();
+    this._worldBounds = new Bounds();
 
     this._dirty = true;
     this._worldDirty = true;
@@ -24,10 +26,19 @@ export default class GameObject {
   }
 
   onAddedToScene() {
+    // can be overridden in derived classes
   }
 
   fixedUpdate() {
     // can be overridden in derived classes
+  }
+
+  getBounds(matrix) {
+    Debug.abstractMethod();
+  }
+
+  getLocalBounds() {
+    return this.getBounds(Transform.identity);
   }
 
   updateLocalTransform() {
@@ -116,7 +127,12 @@ export default class GameObject {
     return this;
   }
 
-  destroy() {}
+  destroy() {
+    this._local = null;
+    this._world = null;
+    this._localBounds = null;
+    this._worldBounds = null;
+  }
 
   get parent() {
     return this._parent;
@@ -235,16 +251,56 @@ export default class GameObject {
     return this._local;
   }
 
-  set localTransform(value) {
-    this._local.copyFrom(value);
-  }
-
   get worldTransform() {
     return this._world;
   }
 
-  set worldTransform(value) {
-    this._world.copyFrom(value);
+  get width() {
+    return this.getLocalBounds().width;
+  }
+
+  set width(value) {
+    this.scale.x = value / this.getLocalBounds().width;
+  }
+
+  get height() {
+    return this.getLocalBounds().width;
+  }
+
+  set height(value) {
+    this.scale.y = value / this.getLocalBounds().height;
+  }
+
+  get left() {
+    return this.getBounds(this._local).minX;
+  }
+
+  set left(value) {
+    this.position.x += value - this.left;
+  }
+
+  get top() {
+    return this.getBounds(this._local).minY;
+  }
+
+  set top(value) {
+    this.position.y += value - this.top;
+  }
+
+  get right() {
+    return this.getBounds(this._local).maxX;
+  }
+
+  set right(value) {
+    this.position.x += value - this.right;
+  }
+
+  get bottom() {
+    return this.getBounds(this._local).maxY;
+  }
+
+  set bottom(value) {
+    this.position.y += value - this.bottom;
   }
 
   _onChange() {

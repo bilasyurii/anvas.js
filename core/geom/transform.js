@@ -221,6 +221,8 @@ export default class Transform {
     this.d *= x;
     this.e *= x;
     this.f *= x;
+
+    return this;
   }
 
   divideScalar(x) {
@@ -232,6 +234,8 @@ export default class Transform {
     this.d *= xInv;
     this.e *= xInv;
     this.f *= xInv;
+
+    return this;
   }
 
   set(a, b, c, d, e, f) {
@@ -241,6 +245,8 @@ export default class Transform {
     this.d = d;
     this.e = e;
     this.f = f;
+
+    return this;
   }
 
   setIdentity() {
@@ -250,6 +256,8 @@ export default class Transform {
     this.d = 0;
     this.e = 1;
     this.f = 0;
+
+    return this;
   }
 
   copyTo(t) {
@@ -259,6 +267,8 @@ export default class Transform {
     t.d = this.d;
     t.e = this.e;
     t.f = this.f;
+
+    return this;
   }
 
   copyFrom(t) {
@@ -268,6 +278,8 @@ export default class Transform {
     this.d = t.d;
     this.e = t.e;
     this.f = t.f;
+
+    return this;
   }
 
   clone() {
@@ -357,3 +369,4 @@ export default class Transform {
 }
 
 Transform.identity = new Transform();
+Transform.tempTransform = new Transform();

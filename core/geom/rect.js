@@ -1,11 +1,20 @@
 import Math2 from '../utils/math2.js';
+import Vec2 from './vec2.js';
+import Bounds from './bounds.js';
 
 export default class Rect {
   constructor(x, y, w, h) {
-    this.x = x;
-    this.y = y;
-    this.w = w;
-    this.h = h;
+    if (x === undefined) {
+      this.x = 0;
+      this.y = 0;
+      this.w = 0;
+      this.h = 0;
+    } else {
+      this.x = x;
+      this.y = y;
+      this.w = w;
+      this.h = h;
+    }
   }
 
   get left() {
@@ -75,12 +84,12 @@ export default class Rect {
   }
 
   scale(x, y) {
-    this.x *= x;
+    this.w *= x;
 
     if (y === undefined) {
-      this.y *= x;
+      this.h *= x;
     } else {
-      this.y *= y;
+      this.h *= y;
     }
 
     return this;
@@ -115,6 +124,15 @@ export default class Rect {
     this.y = y;
     this.w = w;
     this.h = h;
+
+    return this;
+  }
+
+  reset() {
+    this.x = 0;
+    this.y = 0;
+    this.w = 0;
+    this.h = 0;
 
     return this;
   }
@@ -190,13 +208,20 @@ export default class Rect {
     return Math2.hypot2(this.w, this.h);
   }
 
-  add(r) {
+  addRect(r) {
+    const right = this.right;
+    const bottom = this.bottom;
+
     this.x = Math2.min(this.left, r.left);
     this.y = Math2.min(this.top, r.top);
-    this.w = Math2.min(this.right, r.right) - this.x;
-    this.h = Math2.min(this.bottom, r.bottom) - this.y;
+    this.w = Math2.max(right, r.right) - this.x;
+    this.h = Math2.max(bottom, r.bottom) - this.y;
 
     return this;
+  }
+
+  toBounds() {
+    return new Bounds(this.left, this.top, this.right, this.bottom);
   }
 
   toString() {
@@ -213,18 +238,6 @@ export default class Rect {
 
   static smaller(a, b) {
     return (a.isSmallerThan(b) === true ? a : b);
-  }
-
-  static fromMany(rects) {
-    const count = rects.length;
-
-    const rect = rects[0].clone();
-
-    for (let i = 1; i < count; ++i) {
-      rect.add(rects[i]);
-    }
-
-    return rect;
   }
 
   static lerp(a, b, time) {

@@ -1,3 +1,4 @@
+import Transform from '../geom/transform.js';
 import ArrayUtils from '../utils/array-utils.js';
 import GameObject from './game-object.js';
 
@@ -47,6 +48,43 @@ export default class Group extends GameObject {
     for (let i = 0; i < count; ++i) {
       children[i].fixedUpdate();
     }
+  }
+
+  getBounds(matrix) {
+    const bounds = this._worldBounds;
+    const children = this.children;
+    const count = children.length;
+    const worldTransform = this._world;
+
+    this._world = matrix || this._world;
+    this._worldDirty = true;
+
+    bounds.reset();
+
+    for (let i = 0; i < count; ++i) {
+      const child = children[i];
+
+      if (child.visible === false) {
+        continue;
+      }
+
+      bounds.addBounds(child.getBounds());
+    }
+
+    this._world = worldTransform;
+    this._worldDirty = true;
+
+    for (let i = 0; i < count; ++i) {
+      const child = children[i];
+
+      if (child.visible === false) {
+        continue;
+      }
+
+      child.recursiveUpdateTransform();
+    }
+
+    return bounds;
   }
 
   destroy() {
