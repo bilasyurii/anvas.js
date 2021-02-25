@@ -88,4 +88,12 @@ engine.time.events.once(500, () => {
     rect.position.set(group.right, group.bottom);
     // rect.position.set(sprite.getBounds().maxX, sprite.getBounds().maxY);
   });
+
+  engine.time.events.loop(1000, () => {
+    sprite2.visible = !sprite2.visible;
+  });
+});
+
+engine.input.onDown.add((x, y) => {
+  console.log(x, y);
 });

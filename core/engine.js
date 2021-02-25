@@ -8,6 +8,7 @@ import TextureManager from './rendering/texture-manager.js';
 import ObjectsFactory from './utils/objects-factory.js';
 import TimeManager from './time/timer-manager.js';
 import CanvasPool from './rendering/canvas-pool.js';
+import Input from './input/input.js';
 
 export default class Engine {
   constructor() {
@@ -17,6 +18,7 @@ export default class Engine {
     this.textures = null;
     this.create = null;
     this.time = null;
+    this.input = null;
     this.root = null;
 
     this.elapsed = 0;
@@ -85,6 +87,7 @@ export default class Engine {
     this._initTextureManager();
     this._initCache();
     this._initLoader();
+    this._initInput();
     this._initObjectsFactory();
 
     this._setupRAF();
@@ -134,6 +137,7 @@ export default class Engine {
     Debug.defined(color);
 
     canvas.style.backgroundColor = color;
+    canvas.style.userSelect = 'none';
   }
 
   _initRoot() {
@@ -168,6 +172,10 @@ export default class Engine {
 
   _initLoader() {
     this.loader = new Loader(this.cache);
+  }
+
+  _initInput() {
+    this.input = new Input(this);
   }
 
   _initObjectsFactory() {

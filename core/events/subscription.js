@@ -8,9 +8,17 @@ export default class Subscription {
     this._active = true;
   }
 
-  post() {
+  post(additionalArgs) {
     if (this._active === true) {
-      this._cb.apply(this._context, this._args);
+      const _args = this._args;
+
+      if (_args === undefined) {
+        this._cb.apply(this._context, additionalArgs);
+      } else if (additionalArgs === undefined) {
+        this._cb.apply(this._context, _args);
+      } else {
+        this._cb.apply(this._context, _args.concat(additionalArgs));
+      }
 
       if (this._isOnce === true) {
         this.detach();

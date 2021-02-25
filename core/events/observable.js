@@ -52,11 +52,11 @@ export default class Observable {
       return;
     }
 
-    subscriptions = subscriptions.splice(0);
+    const args = Array.prototype.slice.call(arguments);
 
     for (let i = count - 1; i >= 0; --i) {
       if (this._active === true) {
-        subscriptions[i].post();
+        subscriptions[i].post(args);
       } else {
         return;
       }
@@ -110,6 +110,11 @@ export default class Observable {
   }
 
   halt() {
+    this._active = false;
+  }
+
+  destroy() {
+    this._subscriptions = null;
     this._active = false;
   }
 }

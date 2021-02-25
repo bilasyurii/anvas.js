@@ -4,8 +4,6 @@ class ScreenUtils {
   constructor() {
     this.engine = null;
 
-    this._canvas = null;
-
     const width = this.width = 960;
     const height = this.height = 640;
 
@@ -14,6 +12,11 @@ class ScreenUtils {
 
     this.aspect = width / height;
     this.aspectInv = 1 / this.aspect;
+
+    this.scale = 1;
+    this.scaleInv = 1;
+
+    this._canvas = null;
   }
 
   init(engine) {
@@ -71,7 +74,9 @@ class ScreenUtils {
     const windowWidth = window.innerWidth;
     const windowHeight = window.innerHeight;
 
-    const scale = Math2.min(windowWidth / width, windowHeight / height);
+    const scale = this.scale = Math2.min(windowWidth / width, windowHeight / height);
+
+    this.scaleInv = 1 / scale;
 
     const canvasWidth = width * scale;
     const canvasHeight = height * scale;
