@@ -2,6 +2,7 @@ import Observable from '../events/observable.js';
 import Touch from './touch.js';
 import Mouse from './mouse.js';
 import SU from '../screen/screen-utils.js';
+import ArrayUtils from '../utils/array-utils.js';
 
 export default class Input {
   constructor(engine) {
@@ -35,6 +36,30 @@ export default class Input {
     this._setupEvents();
   }
 
+  add(handler) {
+    this.inputHandlers.push(handler);
+  }
+
+  remove(handler) {
+    ArrayUtils.removeByValue(this.inputHandlers, handler);
+  }
+
+  update() {
+    const x = this.x;
+    const y = this.y;
+
+    const handlers = this.inputHandlers;
+    const count = handlers.length;
+
+    for (let i = 0; i < count; ++i) {
+      const handler = handlers[i];
+
+      if (handler !== undefined) {
+        handler.update(x, y);
+      }
+    }
+  }
+
   disableAll() {
     this.touch.enabled = false;
     this.mouse.enabled = false;
@@ -62,19 +87,63 @@ export default class Input {
   _onDown(event) {
     this._handleEvent(event);
 
-    this.onDown.post(this.x, this.y);
+    const x = this.x;
+    const y = this.y;
+
+    const handlers = this.inputHandlers;
+    const count = handlers.length;
+
+    for (let i = 0; i < count; ++i) {
+      const handler = handlers[i];
+
+      if (handler !== undefined) {
+        if (handler.handleDown(x, y) === true) {
+          break;
+        }
+      }
+    }
+
+    this.onDown.post(x, y);
   }
 
   _onUp(event) {
     this._handleEvent(event);
 
-    this.onUp.post(this.x, this.y);
+    const x = this.x;
+    const y = this.y;
+
+    const handlers = this.inputHandlers;
+    const count = handlers.length;
+
+    for (let i = 0; i < count; ++i) {
+      const handler = handlers[i];
+
+      if (handler !== undefined) {
+        handler.handleUp(x, y);
+      }
+    }
+
+    this.onUp.post(x, y);
   }
 
   _onMove(event) {
     this._handleEvent(event);
 
-    this.onMove.post(this.x, this.y);
+    const x = this.x;
+    const y = this.y;
+
+    const handlers = this.inputHandlers;
+    const count = handlers.length;
+
+    for (let i = 0; i < count; ++i) {
+      const handler = handlers[i];
+
+      if (handler !== undefined) {
+        handler.handleMove(x, y);
+      }
+    }
+
+    this.onMove.post(x, y);
   }
 
   _handleEvent(event) {

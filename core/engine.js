@@ -204,6 +204,8 @@ export default class Engine {
 
     this.time.update();
 
+    this.input.update();
+
     let frameTime;
 
     if (sec > 0.25) {

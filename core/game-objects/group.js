@@ -23,6 +23,8 @@ export default class Group extends GameObject {
   }
 
   onAddedToScene() {
+    super.onAddedToScene();
+
     const children = this.children;
     const count = children.length;
     const engine = this.engine;

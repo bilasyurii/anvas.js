@@ -56,6 +56,21 @@ const event = engine.time.events.loop(50, (arg) => {
 engine.time.events.once(500, () => {
   const sprite = engine.create.sprite('test');
 
+  sprite.rotation = 20;
+  sprite.addInput();
+
+  engine.input.onDown.add(() => {
+    sprite.input.toggle();
+  });
+
+  sprite.input.onOver.add(() => {
+    sprite2.visible = false;    
+  });
+
+  sprite.input.onOut.add(() => {
+    sprite2.visible = true;    
+  });
+
   group.add(sprite);
 
   event.cancel();
@@ -89,11 +104,11 @@ engine.time.events.once(500, () => {
     // rect.position.set(sprite.getBounds().maxX, sprite.getBounds().maxY);
   });
 
-  engine.time.events.loop(1000, () => {
-    sprite2.visible = !sprite2.visible;
-  });
+  // engine.time.events.loop(1000, () => {
+  //   sprite2.visible = !sprite2.visible;
+  // });
 });
 
-engine.input.onDown.add((x, y) => {
-  console.log(x, y);
-});
+// engine.input.onDown.add((x, y) => {
+//   console.log('down: ', x, y);
+// });

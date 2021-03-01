@@ -32,6 +32,45 @@ export default class Bounds {
     this.maxY = this.minY + value;
   }
 
+  containsXY(x, y) {
+    return (
+      x >= this.minX &&
+      x <= this.maxX &&
+      y >= this.minY &&
+      y <= this.maxY
+    );
+  }
+
+  contains(vec) {
+    const x = vec.x;
+    const y = vec.y;
+
+    return (
+      x >= this.minX &&
+      x <= this.maxX &&
+      y >= this.minY &&
+      y <= this.maxY
+    );
+  }
+
+  intersects(b) {
+    return !(
+      b.minX > this.maxX ||
+      b.maxX < this.minX ||
+      b.minY > this.maxY ||
+      b.maxY < this.minY
+    );
+  }
+
+  intersectsRaw(minX, maxX, minY, maxY) {
+    return !(
+      minX > this.maxX ||
+      maxX < this.minX ||
+      minY > this.maxY ||
+      maxY < this.minY
+    );
+  }
+
   translate(x, y) {
     this.minX += x;
     this.minY += y;

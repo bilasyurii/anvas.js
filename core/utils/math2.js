@@ -59,3 +59,5 @@ Math2.RAD2DEG = 180 / Math.PI;
 Math2.DEG2RAD = Math.PI / 180;
 
 Math2.PI2 = Math.PI * 2;
+
+Math2.PI05 = Math.PI * 0.5;

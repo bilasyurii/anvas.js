@@ -82,7 +82,7 @@ export default class Transform {
     );
   }
 
-  transformVec(vec) {
+  transform(vec) {
     const x = vec.x;
     const y = vec.y;
 
@@ -92,7 +92,42 @@ export default class Transform {
     );
   }
 
-  translate(x, y) {
+  inverseTransform(vec) {
+    const a = this.a;
+    const b = this.b;
+    const c = this.c;
+    const d = this.d;
+    const e = this.e;
+    const f = this.f;
+
+    const id = 1 / ((a * e) + (d * -b));
+
+    const x = vec.x;
+    const y = vec.y;
+
+    return new Vec2(
+      id * x * e + id * y * -d + id * (f * d - c * e),
+      id * y * a + id * x * -b + id * (-f * a + c * b)
+    );
+  }
+
+  inverseTransformXY(x, y) {
+    const a = this.a;
+    const b = this.b;
+    const c = this.c;
+    const d = this.d;
+    const e = this.e;
+    const f = this.f;
+
+    const id = 1 / ((a * e) + (d * -b));
+
+    return new Vec2(
+      id * x * e + id * y * -d + id * (f * d - c * e),
+      id * y * a + id * x * -b + id * (-f * a + c * b)
+    );
+  }
+
+  translateXY(x, y) {
     return this.combineRaw(
       1, 0, x,
       0, 1, y
@@ -113,7 +148,7 @@ export default class Transform {
     );
   }
 
-  translateVec(vec) {
+  translate(vec) {
     return this.combineRaw(
       1, 0, vec.x,
       0, 1, vec.y
@@ -154,7 +189,7 @@ export default class Transform {
     );
   }
 
-  scale(x, y) {
+  scaleXY(x, y) {
     if (y === undefined) {
       y = x;
     }
@@ -179,7 +214,7 @@ export default class Transform {
     );
   }
 
-  scaleVec(vec) {
+  scale(vec) {
     return this.combineRaw(
       vec.x, 0,     0,
       0,     vec.y, 0

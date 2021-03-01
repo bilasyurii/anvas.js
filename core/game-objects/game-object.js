@@ -3,10 +3,13 @@ import Math2 from '../utils/math2.js';
 import ObservableVec2 from '../geom/observable-vec2.js';
 import Transform from '../geom/transform.js';
 import Bounds from '../geom/bounds.js';
+import InputHandler from '../input/input-handler.js';
 
 export default class GameObject {
   constructor() {
     this.engine = null;
+
+    this.input = null;
 
     this._parent = null;
 
@@ -25,12 +28,34 @@ export default class GameObject {
     this._rotation = 0;
   }
 
-  onAddedToScene() {
+  fixedUpdate() {
     // can be overridden in derived classes
   }
 
-  fixedUpdate() {
-    // can be overridden in derived classes
+  onAddedToScene() {
+    const input = this.input;
+
+    if (input !== null) {
+      input.onAddedToScene();
+    }
+  }
+
+  addInput() {
+    const input = this.input = new InputHandler(this);
+
+    if (this.engine !== null) {
+      input.onAddedToScene();
+    }
+  }
+
+  removeInput() {
+    const input = this.input;
+
+    if (input !== null) {
+      input.destroy();
+
+      this.input = null;
+    }
   }
 
   getBounds(matrix) {
