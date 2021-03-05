@@ -25,6 +25,12 @@ export default class Mouse {
     this.onMove.destroy();
     this.onOut.destroy();
     this.onOver.destroy();
+
+    this.onDown = null;
+    this.onUp = null;
+    this.onMove = null;
+    this.onOut = null;
+    this.onOver = null;
   }
 
   _setupEvents() {

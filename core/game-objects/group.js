@@ -20,6 +20,8 @@ export default class Group extends GameObject {
     }
 
     child.parent = this;
+
+    return child;
   }
 
   onAddedToScene() {

@@ -25,6 +25,12 @@ export default class Touch {
     this.onTouchMove.destroy();
     this.onTouchLeave.destroy();
     this.onTouchEnter.destroy();
+
+    this.onTouchStart = null;
+    this.onTouchEnd = null;
+    this.onTouchMove = null;
+    this.onTouchLeave = null;
+    this.onTouchEnter = null;
   }
 
   _setupEvents() {

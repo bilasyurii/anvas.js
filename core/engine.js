@@ -13,13 +13,14 @@ import Input from './input/input.js';
 export default class Engine {
   constructor() {
     this.renderer = null;
-    this.loader = null;
+    this.load = null;
     this.cache = null;
     this.textures = null;
     this.create = null;
     this.time = null;
     this.input = null;
     this.root = null;
+    this.state = null;
 
     this.elapsed = 0;
     this.elapsedMS = 0;
@@ -34,10 +35,11 @@ export default class Engine {
     this._bodyColor = '#ffffff';
     this._canvasColor = '#000000';
     this._canvasPoolStartingSize = 5;
-    this._preloader = null;
     this._loop = null;
     this._prevTime = 0;
     this._accumulator = 0;
+    this._states = {};
+    this._startingState = null;
   }
 
   get canvas() {
@@ -68,8 +70,14 @@ export default class Engine {
     return this;
   }
 
-  setPreloader(preloader) {
-    this._preloader = preloader;
+  registerState(name, stateClass) {
+    this._states[name] = stateClass;
+
+    return this;
+  }
+
+  setStartingState(name) {
+    this._startingState = name;
 
     return this;
   }
@@ -89,16 +97,31 @@ export default class Engine {
     this._initLoader();
     this._initInput();
     this._initObjectsFactory();
+    this._initStartingState();
 
     this._setupRAF();
 
-    this._preload();
+    return this;
+  }
+
+  changeState(name) {
+    let state = this.state;
+
+    if (state !== null) {
+      state.onLeave();
+    }
+
+    const State = this._states[name];
+
+    state = this.state = new State(this, name);
+
+    state.onEnter();
 
     return this;
   }
 
   add(gameObject) {
-    this.root.add(gameObject);
+    return this.root.add(gameObject);
   }
 
   _configureHtml() {
@@ -182,6 +205,12 @@ export default class Engine {
     this.create = new ObjectsFactory(this);
   }
 
+  _initStartingState() {
+    this.changeState(this._startingState);
+
+    delete this._startingState;
+  }
+
   _setupRAF() {
     this._loop = this._onLoop.bind(this);
 
@@ -235,13 +264,5 @@ export default class Engine {
 
   _step() {
     this.root.fixedUpdate();
-  }
-
-  _preload() {
-    const preloader = this._preloader;
-
-    if (preloader !== null && preloader !== undefined) {
-      preloader(this.loader, this);
-    }
   }
 }

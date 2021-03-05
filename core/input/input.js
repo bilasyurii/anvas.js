@@ -68,6 +68,17 @@ export default class Input {
   destroy() {
     this.mouse.destroy();
     this.touch.destroy();
+    this.onDown.destroy();
+    this.onUp.destroy();
+    this.onMove.destroy();
+
+    this.mouse = null;
+    this.touch = null;
+    this.onDown = null;
+    this.onUp = null;
+    this.onMove = null;
+
+    this.inputHandlers = [];
   }
 
   _setupEvents() {

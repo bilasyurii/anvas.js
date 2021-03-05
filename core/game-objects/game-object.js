@@ -157,6 +157,9 @@ export default class GameObject {
     this._world = null;
     this._localBounds = null;
     this._worldBounds = null;
+    this._position.destroy();
+    this._scale.destroy();
+    this._pivot.destroy();
   }
 
   get parent() {
