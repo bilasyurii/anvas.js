@@ -8,7 +8,6 @@ export default class PreloadState extends State {
 
     load
       .image('test', 'assets/test.png')
-      .image('fail', 'assets/not_existing_file.png')
       .image('sprite', 'assets/sprite.png')
       .start();
   }

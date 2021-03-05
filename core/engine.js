@@ -22,6 +22,7 @@ export default class Engine {
     this.root = null;
     this.state = null;
 
+    this.version = '0.1';
     this.elapsed = 0;
     this.elapsedMS = 0;
     this.physicsElapsed = 0;
@@ -40,6 +41,7 @@ export default class Engine {
     this._accumulator = 0;
     this._states = {};
     this._startingState = null;
+    this._helloMessageEnabled = true;
   }
 
   get canvas() {
@@ -82,7 +84,15 @@ export default class Engine {
     return this;
   }
 
+  setHelloMessageEnabled(value) {
+    this._helloMessageEnabled = value;
+
+    return this;
+  }
+
   start() {
+    this._showHello();
+
     this._configureHtml();
     this._configureBody();
     this._configureCanvas();
@@ -122,6 +132,13 @@ export default class Engine {
 
   add(gameObject) {
     return this.root.add(gameObject);
+  }
+
+  _showHello() {
+    if (this._helloMessageEnabled === true) {
+      const helloMessage = `   Anvas.js v${this.version}   `;
+      console.log('%c' + helloMessage, 'background-color: black; color: yellow;');
+    }
   }
 
   _configureHtml() {
