@@ -7,12 +7,7 @@ export default class Vec2 {
       this.y = 0;
     } else {
       this.x = x;
-
-      if (y === undefined) {
-        this.y = x;
-      } else {
-        this.y = y;
-      }
+      this.y = (y === undefined ? x : y);
     }
   }
 

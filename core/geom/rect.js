@@ -73,48 +73,28 @@ export default class Rect {
 
   translate(x, y) {
     this.x += x;
-
-    if (y === undefined) {
-      y += x;
-    } else {
-      this.y += y;
-    }
+    this.y += (y === undefined ? x : y);
 
     return this;
   }
 
   scale(x, y) {
     this.w *= x;
-
-    if (y === undefined) {
-      this.h *= x;
-    } else {
-      this.h *= y;
-    }
+    this.h *= (y === undefined ? x : y);
 
     return this;
   }
 
   setPosition(x, y) {
     this.x = x;
-
-    if (y === undefined) {
-      this.y = x;
-    } else {
-      this.y = y;
-    }
+    this.y = (y === undefined ? x : y);
 
     return this;
   }
 
   setSize(w, h) {
     this.w = w;
-
-    if (h === undefined) {
-      this.h = w;
-    } else {
-      this.h = h;
-    }
+    this.h = (h === undefined ? w : h);
 
     return this;
   }
@@ -170,18 +150,18 @@ export default class Rect {
 
   equalsEps(r, eps) {
     return (
-      Math2.abs(x - r.x) <= eps &&
-      Math2.abs(y - r.y) <= eps &&
-      Math2.abs(w - r.w) <= eps &&
-      Math2.abs(h - r.h) <= eps
+      Math2.abs(this.x - r.x) <= eps &&
+      Math2.abs(this.y - r.y) <= eps &&
+      Math2.abs(this.w - r.w) <= eps &&
+      Math2.abs(this.h - r.h) <= eps
     );
   }
 
   lerp(to, time) {
-    x += (to.x - x) * time;
-    y += (to.y - y) * time;
-    w += (to.w - w) * time;
-    h += (to.h - h) * time;
+    this.x += (to.x - this.x) * time;
+    this.y += (to.y - this.y) * time;
+    this.w += (to.w - this.w) * time;
+    this.h += (to.h - this.h) * time;
   }
 
   isBiggerThan(r) {

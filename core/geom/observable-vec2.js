@@ -11,12 +11,7 @@ export default class ObservableVec2 {
       this._y = 0;
     } else {
       this._x = x;
-
-      if (y === undefined) {
-        this._y = x;
-      } else {
-        this._y = y;
-      }
+      this._y = (y === undefined ? x : y);
     }
   }
 
@@ -82,12 +77,7 @@ export default class ObservableVec2 {
 
   mul(x, y) {
     this._x *= x;
-
-    if (y === undefined) {
-      this._y *= x;
-    } else {
-      this._y *= y;
-    }
+    this._y *= (y === undefined ? x : y);
 
     this.callback.call(this.context);
 
@@ -105,12 +95,7 @@ export default class ObservableVec2 {
 
   div(x, y) {
     this._x /= x;
-
-    if (y === undefined) {
-      this._y /= x;
-    } else {
-      this._y /= y;
-    }
+    this._y /= (y === undefined ? x : y);
 
     this.callback.call(this.context);
 
@@ -260,12 +245,7 @@ export default class ObservableVec2 {
       this._y = 0;
     } else {
       this._x = x;
-
-      if (y === undefined) {
-        this._y = x;
-      } else {
-        this._y = y;
-      }
+      this._y = (y === undefined ? x : y);
     }
 
     this.callback.call(this.context);
