@@ -52,6 +52,16 @@ export default class Math2 {
   static abs(a) {
     return a < 0 ? -a : a;
   }
+
+  static equals(a, b) {
+    const diff = a - b;
+
+    return diff < Math2.EPS && diff > -Math2.EPS;
+  }
+
+  static zero(x) {
+    return x < Math2.EPS && x > Math2.N_EPS;
+  }
 }
 
 Math2.RAD2DEG = 180 / Math.PI;
@@ -61,3 +71,7 @@ Math2.DEG2RAD = Math.PI / 180;
 Math2.PI2 = Math.PI * 2;
 
 Math2.PI05 = Math.PI * 0.5;
+
+Math2.EPS = 0.001;
+
+Math2.N_EPS = -Math2.EPS;
