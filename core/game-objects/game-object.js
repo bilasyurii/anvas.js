@@ -8,8 +8,8 @@ import InputHandler from '../input/input-handler.js';
 export default class GameObject {
   constructor() {
     this.engine = null;
-
     this.input = null;
+    this.rigidBody = null;
 
     this._parent = null;
 

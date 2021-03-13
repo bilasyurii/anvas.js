@@ -2,6 +2,7 @@ import State from '../core/state/state.js';
 import Group from '../core/game-objects/group.js';
 import Renderable from '../core/rendering/renderable.js';
 import Math2 from '../core/utils/math2.js';
+import RigidBody from '../core/physics/rigid-body.js';
 
 export default class GameState extends State {
   onEnter() {
@@ -30,7 +31,17 @@ export default class GameState extends State {
       console.log(arg);
     }, undefined, 5);
 
-    engine.add(engine.create.sprite('sprite')).position.set(300, 300);
+    const spr = engine.add(engine.create.sprite('sprite'));
+    
+    // spr.position.set(300, 300);
+
+    const rb = new RigidBody(spr);
+
+    spr.rigidBody = rb;
+
+    engine.physics.addRigidBody(rb);
+
+    // rb.addForceXY(1000, 500);
 
     engine.time.events.once(500, () => {
       const sprite = engine.create.sprite('test');
@@ -63,8 +74,6 @@ export default class GameState extends State {
 
       const ctx = bmd.ctx;
 
-      // ctx.fillStyle = 'gray';
-      // ctx.fillRect(0, 0, 100, 100);
       ctx.arc(50, 50, 30, 0, Math2.PI2);
       ctx.fillStyle = 'green';
       ctx.fill();
@@ -77,20 +86,10 @@ export default class GameState extends State {
 
         sprite.right = sprite2.left;
         sprite.bottom = sprite2.top;
-        // sprite.position.set(sprite2.right, sprite2.bottom);
 
         rect.position.set(group.right, group.bottom);
-        // rect.position.set(sprite.getBounds().maxX, sprite.getBounds().maxY);
       });
-
-      // engine.time.events.loop(1000, () => {
-      //   sprite2.visible = !sprite2.visible;
-      // });
     });
-
-    // engine.input.onDown.add((x, y) => {
-    //   console.log('down: ', x, y);
-    // });
   }
 }
 

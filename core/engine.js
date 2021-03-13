@@ -9,6 +9,7 @@ import ObjectsFactory from './utils/objects-factory.js';
 import TimeManager from './time/timer-manager.js';
 import CanvasPool from './rendering/canvas-pool.js';
 import Input from './input/input.js';
+import Physics from './physics/physics.js';
 
 export default class Engine {
   constructor() {
@@ -20,6 +21,7 @@ export default class Engine {
     this.time = null;
     this.input = null;
     this.root = null;
+    this.physics = null;
     this.state = null;
 
     this.version = '0.1';
@@ -107,6 +109,7 @@ export default class Engine {
     this._initLoader();
     this._initInput();
     this._initObjectsFactory();
+    this._initPhysics();
     this._initStartingState();
 
     this._setupRAF();
@@ -222,6 +225,10 @@ export default class Engine {
     this.create = new ObjectsFactory(this);
   }
 
+  _initPhysics() {
+    this.physics = new Physics(this);
+  }
+
   _initStartingState() {
     this.changeState(this._startingState);
 
@@ -274,12 +281,19 @@ export default class Engine {
     this._accumulator = accumulator;
     this.physicsElapsedMS = this.physicsElapsed * 1000;
 
+    this._postUpdate();
+
     this.renderer.render();
 
     window.requestAnimationFrame(this._loop);
   }
 
   _step() {
+    this.physics.fixedUpdate();
     this.root.fixedUpdate();
+  }
+
+  _postUpdate() {
+    this.physics.postUpdate();
   }
 }
