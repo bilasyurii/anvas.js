@@ -138,8 +138,8 @@ export default class ObservableVec2 {
       this._x = 1;
       this._y = 0;
     } else {
-      this._x /= length;
-      this._y /= length;
+      this._x = x / length;
+      this._y = y / length;
     }
 
     this.callback.call(this.context);
@@ -155,41 +155,40 @@ export default class ObservableVec2 {
     if (length === 0) {
       return new Vec2(1, 0);
     } else {
-      return new Vec2(this._x / length, this._y / length);
+      return new Vec2(x / length, y / length);
     }
   }
 
   negate() {
-    const x = this._x;
-    const y = this._y;
-
-    if (x !== 0) {
-      this._x = 1 / x;
-    }
-
-    if (y !== 0) {
-      this._y = 1 / y;
-    }
+    this._x = -this._x;
+    this._y = -this._y;
 
     this.callback.call(this.context);
+
+    return this;
   }
 
   negated() {
+    return new Vec2(-this._x, -this._y);
+  }
+
+  invert() {
+    const x = this._x;
+    const y = this._y;
+
+    this._x = x === 0 ? 0 : 1 / x;
+    this._y = y === 0 ? 0 : 1 / y;
+
+    this.callback.call(this.context);
+
+    return this;
+  }
+
+  inverted() {
     const x = this._x;
     const y = this._y;
 
     return new Vec2(x === 0 ? 0 : 1 / x, y === 0 ? 0 : 1 / y);
-  }
-
-  invert() {
-    this._x = 1 / this._x;
-    this._y = 1 / this._y;
-
-    this.callback.call(this.context);
-  }
-
-  inverted() {
-    return new Vec2(-this._x, -this._y);
   }
 
   radians() {
@@ -209,6 +208,8 @@ export default class ObservableVec2 {
     this._y = sin * length;
 
     this.callback.call(this.context);
+
+    return this;
   }
 
   setDegrees(value) {
@@ -222,6 +223,8 @@ export default class ObservableVec2 {
     this._y = sin * length;
 
     this.callback.call(this.context);
+
+    return this;
   }
 
   perpendicular() {
@@ -230,6 +233,8 @@ export default class ObservableVec2 {
 
   copyTo(vec) {
     vec.set(this._x, this._y);
+
+    return this;
   }
 
   copyFrom(vec) {
@@ -237,6 +242,8 @@ export default class ObservableVec2 {
     this._y = vec.y;
 
     this.callback.call(this.context);
+
+    return this;
   }
 
   set(x, y) {
@@ -249,46 +256,58 @@ export default class ObservableVec2 {
     }
 
     this.callback.call(this.context);
+
+    return this;
   }
 
   setX(x) {
     this._x = x;
 
     this.callback.call(this.context);
+
+    return this;
   }
 
   setY(y) {
     this._y = y;
 
     this.callback.call(this.context);
+
+    return this;
   }
 
   setZero() {
     this._x = this._y = 0;
 
     this.callback.call(this.context);
+
+    return this;
   }
 
   setFromRadians(angle, length) {
-    var sin = Math.sin(angle);
-    var cos = Math.cos(angle);
+    const sin = Math.sin(angle);
+    const cos = Math.cos(angle);
 
     this._x = cos * length;
     this._y = sin * length;
 
     this.callback.call(this.context);
+
+    return this;
   }
 
   setFromDegrees(angle, length) {
     angle *= Math2.DEG2RAD;
 
-    var sin = Math.sin(angle);
-    var cos = Math.cos(angle);
+    const sin = Math.sin(angle);
+    const cos = Math.cos(angle);
 
     this._x = cos * length;
     this._y = sin * length;
 
     this.callback.call(this.context);
+
+    return this;
   }
 
   angleTo(vec) {
@@ -350,10 +369,11 @@ export default class ObservableVec2 {
   rotate(angle) {
     const sin = Math.sin(angle);
     const cos = Math.cos(angle);
-    const prevX = x;
+    const x = _x;
+    const y = _y;
 
-    this._x = this._y * cos + this._y * sin;
-    this._y = this._y * cos - prevX * sin;
+    this._x = x * cos + y * sin;
+    this._y = y * cos - x * sin;
 
     this.callback.call(this.context);
 
@@ -363,9 +383,13 @@ export default class ObservableVec2 {
   rotated(angle) {
     const sin = Math.sin(angle);
     const cos = Math.cos(angle);
-    const prevX = x;
+    const x = _x;
+    const y = _y;
 
-    return new Vec2(this._y * cos + this._y * sin, this._y * cos - prevX * sin);
+    return new Vec2(
+      x * cos + y * sin,
+      y * cos - x * sin
+    );
   }
 
   rotateAround(center, angle) {
@@ -379,6 +403,8 @@ export default class ObservableVec2 {
     this._y = dirY * cos - dirX * sin + center.y;
 
     this.callback.call(this.context);
+
+    return this;
   }
 
   rotateAroundThis(point, angle) {
@@ -400,52 +426,69 @@ export default class ObservableVec2 {
   }
 
   lerp(to, time) {
-    x += (to.x - x) * time;
-    y += (to.y - y) * time;
+    const x = this._x;
+    const y = this._y;
+
+    this._x = x + (to.x - x) * time;
+    this._y = y + (to.y - y) * time;
 
     this.callback.call(this.context);
+
+    return this;
   }
 
   clamp(min, max) {
-    x = MathF.Max(min, MathF.Min(max, x));
-    y = MathF.Max(min, MathF.Min(max, y));
+    this._x = Math2.max(min, Math2.min(max, this._x));
+    this._y = Math2.max(min, Math2.min(max, this._y));
 
     this.callback.call(this.context);
+
+    return this;
   }
 
   clamp2(minVec, maxVec) {
-    x = MathF.Max(minVec.x, MathF.Min(maxVec.x, x));
-    y = MathF.Max(minVec.y, MathF.Min(maxVec.y, y));
+    this._x = Math2.max(minVec.x, Math2.min(maxVec.x, this._x));
+    this._y = Math2.max(minVec.y, Math2.min(maxVec.y, this._y));
 
     this.callback.call(this.context);
+
+    return this;
   }
 
   clampLength(min, max) {
-    var currentLength = Length;
+    const currentLength = Length;
 
-    Normalize();
-    Multiply(MathF.Max(min, MathF.Min(max, currentLength)));
+    this.normalize();
+    this.mul(Math2.max(min, Math2.min(max, currentLength)));
+
+    return this;
   }
 
   floor() {
-    this._x = Math.floor(x);
-    this._y = Math.floor(y);
+    this._x = Math.floor(this._x);
+    this._y = Math.floor(this._y);
 
     this.callback.call(this.context);
+
+    return this;
   }
 
   ceil() {
-    this._x = Math.ceil(x);
-    this._y = Math.ceil(y);
+    this._x = Math.ceil(this._x);
+    this._y = Math.ceil(this._y);
 
     this.callback.call(this.context);
+
+    return this;
   }
 
   round() {
-    this._x = Math.round(x);
-    this._y = Math.round(y);
+    this._x = Math.round(this._x);
+    this._y = Math.round(this._y);
 
     this.callback.call(this.context);
+
+    return this;
   }
 
   equals(vec) {
@@ -453,7 +496,10 @@ export default class ObservableVec2 {
   }
 
   equalsEps(vec, eps) {
-    return Math2.abs(x - vec.x) <= eps && Math2.abs(y - vec.y) <= eps;
+    return (
+      Math2.abs(this._x - vec.x) <= eps &&
+      Math2.abs(this._y - vec.y) <= eps
+    );
   }
 
   toString() {
@@ -461,6 +507,9 @@ export default class ObservableVec2 {
   }
 
   hash() {
+    const x = this._x;
+    const y = this._y;
+
     return ~~(x * y + x + y);
   }
 

@@ -1,10 +1,19 @@
 import Vec2 from '../geom/vec2.js';
+import Material from './material.js';
 
 export default class RigidBody {
-  constructor(gameObject) {
+  constructor(gameObject, material) {
     this.gameObject = gameObject;
+
+    if (material === undefined) {
+      this.material = Material.default;
+    } else {
+      this.material = material;
+    }
+
     this.position = new Vec2();
     this.velocity = new Vec2();
+    this.collider = null;
 
     this._force = new Vec2();
     this._mass = 1;
@@ -27,6 +36,10 @@ export default class RigidBody {
 
   get invMass() {
     return this._invMass;
+  }
+
+  get isStatic() {
+    return this._mass === 0;
   }
 
   addForce(force) {
@@ -55,11 +68,28 @@ export default class RigidBody {
     force.setZero();
   }
 
-  updateTransform() {
+  preUpdate() {
+    const position = this.position;
     const gameObject = this.gameObject;
 
     if (gameObject !== undefined) {
-      gameObject.position = this.position;
+      position.copyFrom(gameObject.position);
+    }
+
+    const collider = this.collider;
+
+    if (collider !== null) {
+      collider.position = position;
+    }
+  }
+
+  postUpdate() {
+    const position = this.position;
+
+    const gameObject = this.gameObject;
+
+    if (gameObject !== undefined) {
+      gameObject.position = position;
     }
   }
 }

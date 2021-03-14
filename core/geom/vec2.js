@@ -41,12 +41,7 @@ export default class Vec2 {
 
   mul(x, y) {
     this.x *= x;
-
-    if (y === undefined) {
-      this.y *= x;
-    } else {
-      this.y *= y;
-    }
+    this.y *= (y === undefined ? x : y);
 
     return this;
   }
@@ -60,12 +55,7 @@ export default class Vec2 {
 
   div(x, y) {
     this.x /= x;
-
-    if (y === undefined) {
-      this.y /= x;
-    } else {
-      this.y /= y;
-    }
+    this.y /= (y === undefined ? x : y);
 
     return this;
   }
@@ -113,8 +103,8 @@ export default class Vec2 {
       this.x = 1;
       this.y = 0;
     } else {
-      this.x /= length;
-      this.y /= length;
+      this.x = x / length;
+      this.y = y / length;
     }
 
     return this;
@@ -128,37 +118,36 @@ export default class Vec2 {
     if (length === 0) {
       return new Vec2(1, 0);
     } else {
-      return new Vec2(this.x / length, this.y / length);
+      return new Vec2(x / length, y / length);
     }
   }
 
   negate() {
-    const x = this.x;
-    const y = this.y;
+    this.x = -this.x;
+    this.y = -this.y;
 
-    if (x !== 0) {
-      this.x = 1 / x;
-    }
-
-    if (y !== 0) {
-      this.y = 1 / y;
-    }
+    return this;
   }
 
   negated() {
+    return new Vec2(-this.x, -this.y);
+  }
+
+  invert() {
+    const x = this.x;
+    const y = this.y;
+
+    this.x = x === 0 ? 0 : 1 / x;
+    this.y = y === 0 ? 0 : 1 / y;
+
+    return this;
+  }
+
+  inverted() {
     const x = this.x;
     const y = this.y;
 
     return new Vec2(x === 0 ? 0 : 1 / x, y === 0 ? 0 : 1 / y);
-  }
-
-  invert() {
-    this.x = 1 / this.x;
-    this.y = 1 / this.y;
-  }
-
-  inverted() {
-    return new Vec2(-this.x, -this.y);
   }
 
   radians() {
@@ -176,6 +165,8 @@ export default class Vec2 {
 
     this.x = cos * length;
     this.y = sin * length;
+
+    return this;
   }
 
   setDegrees(value) {
@@ -187,6 +178,8 @@ export default class Vec2 {
 
     this.x = cos * length;
     this.y = sin * length;
+
+    return this;
   }
 
   perpendicular() {
@@ -196,11 +189,15 @@ export default class Vec2 {
   copyTo(vec) {
     vec.x = this.x;
     vec.y = this.y;
+
+    return this;
   }
 
   copyFrom(vec) {
     this.x = vec.x;
     this.y = vec.y;
+
+    return this;
   }
 
   set(x, y) {
@@ -209,59 +206,79 @@ export default class Vec2 {
       this.y = 0;
     } else {
       this.x = x;
-
-      if (y === undefined) {
-        this.y = x;
-      } else {
-        this.y = y;
-      }
+      this.y = (y === undefined ? x: y);
     }
+
+    return this;
   }
 
   setX(x) {
     this.x = x;
+
+    return this;
   }
 
   setY(y) {
     this.y = y;
+
+    return this;
   }
 
   setZero() {
-    this.x = this.y = 0;
+    this.x = 0;
+    this.y = 0;
+
+    return this;
   }
 
   setFromRadians(angle, length) {
-    var sin = Math.sin(angle);
-    var cos = Math.cos(angle);
+    const sin = Math.sin(angle);
+    const cos = Math.cos(angle);
 
     this.x = cos * length;
     this.y = sin * length;
+
+    return this;
   }
 
   setFromDegrees(angle, length) {
     angle *= Math2.DEG2RAD;
 
-    var sin = Math.sin(angle);
-    var cos = Math.cos(angle);
+    const sin = Math.sin(angle);
+    const cos = Math.cos(angle);
 
     this.x = cos * length;
     this.y = sin * length;
+
+    return this;
   }
 
   angleTo(vec) {
-    return Math.atan2(y * vec.x - x * vec.y, x * vec.x + y * vec.y);
+    const x = this.x;
+    const y = this.y;
+
+    return Math.atan2(
+      y * vec.x - x * vec.y,
+      x * vec.x + y * vec.y
+    );
   }
 
   angleToDeg(vec) {
-    return Math.atan2(y * vec.x - x * vec.y, x * vec.x + y * vec.y) * Math2.Rad2Deg;
+    const x = this.x;
+    const y = this.y;
+
+    return Math.atan2(
+      y * vec.x - x * vec.y,
+      x * vec.x + y * vec.y
+    ) * Math2.Rad2Deg;
   }
 
   dot(vec) {
-    return x * vec.x + y * vec.y;
+    return this.x * vec.x + this.y * vec.y;
   }
 
   cross(vec) {
-    return x * vec.y - y * vec.x;
+    return this.x * vec.y - this.y * vec.x;
   }
 
   isZero() {
@@ -293,10 +310,11 @@ export default class Vec2 {
   rotate(angle) {
     const sin = Math.sin(angle);
     const cos = Math.cos(angle);
-    const prevX = x;
+    const x = this.x;
+    const y = this.y;
 
-    this.x = this.y * cos + this.y * sin;
-    this.y = this.y * cos - prevX * sin;
+    this.x = x * cos + y * sin;
+    this.y = y * cos - x * sin;
 
     return this;
   }
@@ -304,9 +322,13 @@ export default class Vec2 {
   rotated(angle) {
     const sin = Math.sin(angle);
     const cos = Math.cos(angle);
-    const prevX = x;
+    const x = this.x;
+    const y = this.y;
 
-    return new Vec2(this.y * cos + this.y * sin, this.y * cos - prevX * sin);
+    return new Vec2(
+      x * cos + y * sin,
+      y * cos - x * sin
+    );
   }
 
   rotateAround(center, angle) {
@@ -318,6 +340,8 @@ export default class Vec2 {
 
     this.x = dirX * cos + dirY * sin + center.x;
     this.y = dirY * cos - dirX * sin + center.y;
+
+    return this;
   }
 
   rotateAroundThis(point, angle) {
@@ -337,42 +361,59 @@ export default class Vec2 {
   }
 
   lerp(to, time) {
-    x += (to.x - x) * time;
-    y += (to.y - y) * time;
+    const x = this.x;
+    const y = this.y;
+
+    this.x = x + (to.x - x) * time;
+    this.y = y + (to.y - y) * time;
+
+    return this;
   }
 
   clamp(min, max) {
-    x = Math.max(min, Math.min(max, x));
-    y = Math.max(min, Math.min(max, y));
+    this.x = Math.max(min, Math.min(max, this.x));
+    this.y = Math.max(min, Math.min(max, this.y));
+
+    return this;
   }
 
   clamp2(minVec, maxVec) {
-    x = Math.max(minVec.x, Math2.min(maxVec.x, x));
-    y = Math.max(minVec.y, Math2.min(maxVec.y, y));
+    this.x = Math.max(minVec.x, Math2.min(maxVec.x, this.x));
+    this.y = Math.max(minVec.y, Math2.min(maxVec.y, this.y));
+
+    return this;
   }
 
   clampLength(min, max) {
     const currentLength = this.length();
 
     if (currentLength < min || currentLength > max) {
-      Normalize();
-      Multiply(Math.max(min, Math.min(max, currentLength)));
+      this.normalize();
+      this.mul(Math.max(min, Math.min(max, currentLength)));
     }
+
+    return this;
   }
 
   floor() {
-    this.x = Math.floor(x);
-    this.y = Math.floor(y);
+    this.x = Math.floor(this.x);
+    this.y = Math.floor(this.y);
+
+    return this;
   }
 
   ceil() {
-    this.x = Math.ceil(x);
-    this.y = Math.ceil(y);
+    this.x = Math.ceil(this.x);
+    this.y = Math.ceil(this.y);
+
+    return this;
   }
 
   round() {
-    this.x = Math.round(x);
-    this.y = Math.round(y);
+    this.x = Math.round(this.x);
+    this.y = Math.round(this.y);
+
+    return this;
   }
 
   equals(vec) {
@@ -380,7 +421,10 @@ export default class Vec2 {
   }
 
   equalsEps(vec, eps) {
-    return Math2.abs(x - vec.x) <= eps && Math2.abs(y - vec.y) <= eps;
+    return (
+      Math2.abs(this.x - vec.x) <= eps &&
+      Math2.abs(this.y - vec.y) <= eps
+    );
   }
 
   toString() {
@@ -388,6 +432,9 @@ export default class Vec2 {
   }
 
   hash() {
+    const x = this.x;
+    const y = this.y;
+
     return ~~(x * y + x + y);
   }
 

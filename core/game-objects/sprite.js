@@ -186,19 +186,19 @@ export default class Sprite extends Renderable {
   }
 
   get width() {
-    return this._localBounds.w;
+    return this._localBounds.width * this.scale.x;
   }
 
   get height() {
-    return this._localBounds.h;
+    return this._localBounds.height * this.scale.x;
   }
 
   set width(value) {
-    this.scale.x = value / this._localBounds.w;
+    this.scale.x = value / this._localBounds.width;
   }
 
   set height(value) {
-    this.scale.y = value / this._localBounds.h;
+    this.scale.y = value / this._localBounds.height;
   }
 
   destroy() {

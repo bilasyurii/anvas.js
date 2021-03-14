@@ -3,6 +3,7 @@ import Group from '../core/game-objects/group.js';
 import Renderable from '../core/rendering/renderable.js';
 import Math2 from '../core/utils/math2.js';
 import RigidBody from '../core/physics/rigid-body.js';
+import Circle from '../core/geom/circle.js';
 
 export default class GameState extends State {
   onEnter() {
@@ -31,17 +32,40 @@ export default class GameState extends State {
       console.log(arg);
     }, undefined, 5);
 
-    const spr = engine.add(engine.create.sprite('sprite'));
-    
-    // spr.position.set(300, 300);
+    function createCircle(radius, color, mass) {
+      const bmd = engine.create.bitmap(300, 300);
+      const spr = engine.add(engine.create.sprite(bmd));
 
-    const rb = new RigidBody(spr);
+      const ctx = bmd.ctx;
 
-    spr.rigidBody = rb;
+      ctx.arc(150, 150, 150, 0, Math2.PI2);
+      ctx.fillStyle = color;
+      ctx.fill();
 
-    engine.physics.addRigidBody(rb);
+      spr.width = radius * 2;
+      spr.scale.y = spr.scale.x;
 
-    // rb.addForceXY(1000, 500);
+      spr.alignPivot();
+
+      const rb = new RigidBody(spr);
+
+      rb.mass = mass;
+      rb.collider = new Circle(0, 0, radius);
+      spr.rigidBody = rb;
+
+      engine.physics.addRigidBody(rb);
+
+      return spr;
+    }
+
+    const spr1 = createCircle(50, 'magenta', 2);
+    const spr2 = createCircle(25, 'red', 1);
+
+    spr1.position.set(300, 300);
+    spr2.position.set(500, 300);
+
+    spr1.rigidBody.addForceXY(16000, 8000);
+    spr2.rigidBody.addForceXY(-4000, 2000);
 
     engine.time.events.once(500, () => {
       const sprite = engine.create.sprite('test');

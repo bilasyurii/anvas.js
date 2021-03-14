@@ -46,6 +46,8 @@ export default class GameObject {
     if (this.engine !== null) {
       input.onAddedToScene();
     }
+
+    return this;
   }
 
   removeInput() {
@@ -56,6 +58,8 @@ export default class GameObject {
 
       this.input = null;
     }
+
+    return this;
   }
 
   getBounds(matrix) {
@@ -284,7 +288,7 @@ export default class GameObject {
   }
 
   get width() {
-    return this.getLocalBounds().width;
+    return this.getLocalBounds().width * this.scale.x;
   }
 
   set width(value) {
@@ -292,7 +296,7 @@ export default class GameObject {
   }
 
   get height() {
-    return this.getLocalBounds().width;
+    return this.getLocalBounds().width * this.scale.y;
   }
 
   set height(value) {
@@ -329,6 +333,21 @@ export default class GameObject {
 
   set bottom(value) {
     this.position.y += value - this.bottom;
+  }
+
+  alignPivot(x, y) {
+    if (x === undefined) {
+      x = 0.5;
+    }
+
+    const localBounds = this.getLocalBounds();
+
+    this.pivot.set(
+      localBounds.width * x,
+      localBounds.height * (y === undefined ? x : y)
+    );
+
+    return this;
   }
 
   _onChange() {

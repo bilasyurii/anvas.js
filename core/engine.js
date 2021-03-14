@@ -44,6 +44,7 @@ export default class Engine {
     this._states = {};
     this._startingState = null;
     this._helloMessageEnabled = true;
+    this._physicsSolveIterations = 5;
   }
 
   get canvas() {
@@ -88,6 +89,12 @@ export default class Engine {
 
   setHelloMessageEnabled(value) {
     this._helloMessageEnabled = value;
+
+    return this;
+  }
+
+  setPhysicsSolveIterations(count) {
+    this._physicsSolveIterations = count;
 
     return this;
   }
@@ -226,7 +233,7 @@ export default class Engine {
   }
 
   _initPhysics() {
-    this.physics = new Physics(this);
+    this.physics = new Physics(this, this._physicsSolveIterations);
   }
 
   _initStartingState() {
@@ -259,6 +266,8 @@ export default class Engine {
 
     this.input.update();
 
+    this.physics.preUpdate();
+
     let frameTime;
 
     if (sec > 0.25) {
@@ -281,7 +290,7 @@ export default class Engine {
     this._accumulator = accumulator;
     this.physicsElapsedMS = this.physicsElapsed * 1000;
 
-    this._postUpdate();
+    this.physics.postUpdate();
 
     this.renderer.render();
 
@@ -291,9 +300,5 @@ export default class Engine {
   _step() {
     this.physics.fixedUpdate();
     this.root.fixedUpdate();
-  }
-
-  _postUpdate() {
-    this.physics.postUpdate();
   }
 }
