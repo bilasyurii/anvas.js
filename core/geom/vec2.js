@@ -67,30 +67,28 @@ export default class Vec2 {
     return this;
   }
 
-  length() {
+  get length() {
     const x = this.x;
     const y = this.y;
 
     return Math.sqrt(x * x + y * y);
   }
 
-  setLength(value) {
+  set length(value) {
     this.normalize();
 
     this.x *= value;
     this.y *= value;
-
-    return this;
   }
 
-  lengthSqr() {
+  get lengthSqr() {
     const x = this.x;
     const y = this.y;
 
     return x * x + y * y;
   }
 
-  manhattan() {
+  get manhattan() {
     return Math2.abs(this.x) + Math2.abs(this.y);
   }
 
@@ -159,7 +157,7 @@ export default class Vec2 {
   }
 
   setRadians(value) {
-    const length = this.length();
+    const length = this.length;
     const sin = Math.sin(value);
     const cos = Math.cos(value);
 
@@ -172,7 +170,7 @@ export default class Vec2 {
   setDegrees(value) {
     value *= Math2.DEG2RAD;
 
-    const length = this.length();
+    const length = this.length;
     const sin = Math.sin(value);
     const cos = Math.cos(value);
 
@@ -281,7 +279,7 @@ export default class Vec2 {
     return this.x * vec.y - this.y * vec.x;
   }
 
-  isZero() {
+  get isZero() {
     return this.x === 0 && this.y === 0;
   }
 
@@ -371,25 +369,25 @@ export default class Vec2 {
   }
 
   clamp(min, max) {
-    this.x = Math.max(min, Math.min(max, this.x));
-    this.y = Math.max(min, Math.min(max, this.y));
+    this.x = Math2.max(min, Math2.min(max, this.x));
+    this.y = Math2.max(min, Math2.min(max, this.y));
 
     return this;
   }
 
   clamp2(minVec, maxVec) {
-    this.x = Math.max(minVec.x, Math2.min(maxVec.x, this.x));
-    this.y = Math.max(minVec.y, Math2.min(maxVec.y, this.y));
+    this.x = Math2.max(minVec.x, Math2.min(maxVec.x, this.x));
+    this.y = Math2.max(minVec.y, Math2.min(maxVec.y, this.y));
 
     return this;
   }
 
   clampLength(min, max) {
-    const currentLength = this.length();
+    const currentLength = this.length;
 
     if (currentLength < min || currentLength > max) {
       this.normalize();
-      this.mul(Math.max(min, Math.min(max, currentLength)));
+      this.mul(Math2.max(min, Math2.min(max, currentLength)));
     }
 
     return this;
@@ -439,11 +437,11 @@ export default class Vec2 {
   }
 
   static longer(a, b) {
-    return (b.lengthSqr() > a.lengthSqr()) ? b : a;
+    return (b.lengthSqr > a.lengthSqr) ? b : a;
   }
 
   static shorter(a, b) {
-    return (b.lengthSqr() < a.lengthSqr()) ? b : a;
+    return (b.lengthSqr < a.lengthSqr) ? b : a;
   }
 
   static fromRadians(angle, length) {
@@ -472,7 +470,7 @@ export default class Vec2 {
   static angleBetween(a, b) {
     const dot = a.x * b.x + a.y * b.y;
 
-    return Math.acos(dot / (a.length() * b.length()));
+    return Math.acos(dot / (a.length * b.length));
   }
 }
 

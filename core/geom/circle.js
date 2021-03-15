@@ -12,8 +12,6 @@ export default class Circle {
     }
 
     this.radius = (radius === undefined ? 0 : radius);
-
-    this.isCircle = true;
   }
 
   get area() {

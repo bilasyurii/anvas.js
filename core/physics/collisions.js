@@ -9,21 +9,34 @@ export default class Collisions {
   }
 
   static checkCollision(a, b) {
-    if (a.isCircle === true && b.isCircle === true) {
-      return Collisions.circle2circle(a, b);
+    if (a.isCircle === true) {
+      if (b.isCircle === true) {
+        return Collisions.circle2circle(a, b);
+      } else if (b.isAABB === true) {
+        return Collisions.circle2AABB(a, b);
+      } else {
+        Debug.fail('Unknown collider');
+      }
+    } else if (a.isAABB === true) {
+      if (b.isCircle === true) {
+        return Collisions.circle2AABB(b, a);
+      } else {
+        Debug.fail('Unknown collider');
+      }
     } else {
-      console.error(a, b);
       Debug.fail('Unknown collider');
     }
   }
 
   static circle2circle(a, b) {
     const aR = a.radius;
-    const aX = a.x;
-    const aY = a.y;
+    const aPos = a.position;
+    const aX = aPos.x;
+    const aY = aPos.y;
     const radiuses = aR + b.radius;
-    const dx = b.x - aX;
-    const dy = b.y - aY;
+    const bPos = b.position;
+    const dx = bPos.x - aX;
+    const dy = bPos.y - aY;
 
     const distanceSqr = dx * dx + dy * dy;
 
@@ -41,5 +54,21 @@ export default class Collisions {
 
     return new CollisionData(normal, depth)
       .addContact(contact);
+  }
+
+  static circle2AABB(c, b) {
+    const circlePos = c.position;
+    const closest = b.clampVec(circlePos);
+    const direction = closest.clone().subVec(circlePos);
+    const depth = direction.length;
+
+    if (depth >= c.radius) {
+      return new CollisionData();
+    }
+
+    direction.normalize();
+
+    return new CollisionData(direction, depth)
+      .addContact(closest);
   }
 }

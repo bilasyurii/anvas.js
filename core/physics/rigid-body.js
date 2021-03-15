@@ -79,7 +79,7 @@ export default class RigidBody {
     const collider = this.collider;
 
     if (collider !== null) {
-      collider.position = position;
+      collider.updateTransform(position.x, position.y);
     }
   }
 

@@ -1,5 +1,6 @@
 import Math2 from '../utils/math2.js';
 import Rect from './rect.js';
+import Vec2 from './vec2.js';
 
 export default class Bounds {
   constructor(minX, minY, maxX, maxY) {
@@ -30,6 +31,25 @@ export default class Bounds {
 
   set height(value) {
     this.maxY = this.minY + value;
+  }
+
+  get position() {
+    return new Vec2(this.minX, this.minY);
+  }
+
+  set position(vec) {
+    const minX = this.minX;
+    const minY = this.minY;
+    const maxX = this.maxX;
+    const maxY = this.maxY;
+
+    const offsetX = vec.x - minX;
+    const offsetY = vec.y - minY;
+
+    this.minX = minX + offsetX;
+    this.maxX = maxX + offsetX;
+    this.minY = minY + offsetY;
+    this.maxY = maxY + offsetY;
   }
 
   containsXY(x, y) {
@@ -167,6 +187,13 @@ export default class Bounds {
     this.maxY = Math2.max(this.maxY, v.y);
 
     return this;
+  }
+
+  clampVec(vec) {
+    return new Vec2(
+      Math2.max(this.minX, Math2.min(this.maxX, vec.x)),
+      Math2.max(this.minY, Math2.min(this.maxY, vec.y))
+    );
   }
 
   toRect() {

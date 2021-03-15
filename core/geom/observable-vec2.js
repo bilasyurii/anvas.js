@@ -111,21 +111,21 @@ export default class ObservableVec2 {
     return this;
   }
 
-  length() {
+  get length() {
     const x = this._x;
     const y = this._y;
 
     return Math.sqrt(x * x + y * y);
   }
 
-  lengthSqr() {
+  get lengthSqr() {
     const x = this._x;
     const y = this._y;
 
     return x * x + y * y;
   }
 
-  manhattan() {
+  get manhattan() {
     return Math2.abs(this._x) + Math2.abs(this._y);
   }
 
@@ -200,7 +200,7 @@ export default class ObservableVec2 {
   }
 
   setRadians(value) {
-    const length = this.length();
+    const length = this.length;
     const sin = Math.sin(value);
     const cos = Math.cos(value);
 
@@ -215,7 +215,7 @@ export default class ObservableVec2 {
   setDegrees(value) {
     value *= Math2.DEG2RAD;
 
-    const length = this.length();
+    const length = this.length;
     const sin = Math.sin(value);
     const cos = Math.cos(value);
 
@@ -332,7 +332,7 @@ export default class ObservableVec2 {
     return this._x * vec.y - this._y * vec.x;
   }
 
-  isZero() {
+  get isZero() {
     return this._x === 0 && this._y === 0;
   }
 
@@ -456,7 +456,7 @@ export default class ObservableVec2 {
   }
 
   clampLength(min, max) {
-    const currentLength = Length;
+    const currentLength = this.length;
 
     this.normalize();
     this.mul(Math2.max(min, Math2.min(max, currentLength)));
