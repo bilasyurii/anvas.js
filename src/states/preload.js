@@ -1,4 +1,4 @@
-import State from '../core/state/state.js';
+import State from '../anvas/state/state.js';
 
 export default class PreloadState extends State {
   onEnter() {

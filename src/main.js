@@ -1,4 +1,4 @@
-import Engine from './core/engine.js';
+import Engine from './anvas/engine.js';
 import PreloadState from './states/preload.js';
 import GameState from './states/game.js';
 

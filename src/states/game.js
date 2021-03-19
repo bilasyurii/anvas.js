@@ -1,11 +1,11 @@
-import State from '../core/state/state.js';
-import Group from '../core/game-objects/group.js';
-import Renderable from '../core/rendering/renderable.js';
-import Math2 from '../core/utils/math2.js';
-import RigidBody from '../core/physics/rigid-body.js';
-import CircleCollider from '../core/physics/colliders/circle-collider.js';
-import AABBCollider from '../core/physics/colliders/aabb-collider.js';
-import Vec2 from '../core/geom/vec2.js';
+import State from '../anvas/state/state.js';
+import Group from '../anvas/game-objects/group.js';
+import Renderable from '../anvas/rendering/renderable.js';
+import Math2 from '../anvas/utils/math2.js';
+import RigidBody from '../anvas/physics/rigid-body.js';
+import CircleCollider from '../anvas/physics/colliders/circle-collider.js';
+import AABBCollider from '../anvas/physics/colliders/aabb-collider.js';
+import Vec2 from '../anvas/geom/vec2.js';
 
 export default class GameState extends State {
   onEnter() {
