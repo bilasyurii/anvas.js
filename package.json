@@ -1,6 +1,6 @@
 {
   "name": "anvas.js",
-  "version": "1.0.0",
+  "version": "0.2.0",
   "description": "Anvas.js is a minimalistic game engine inspired by PIXI.js & Phaser 2.",
   "main": "src/main.js",
   "scripts": {
