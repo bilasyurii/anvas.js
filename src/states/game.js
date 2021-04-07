@@ -34,6 +34,18 @@ export default class GameState extends State {
       console.log(arg);
     }, undefined, 5);
 
+    const r = engine.add(new Rectangle());
+
+    // r.pivot.set(50, 50);
+    r.position.set(200, 400);
+
+    const rRb = r.rigidBody = new RigidBody(r);
+
+    rRb.mass = 0;
+    rRb.collider = new AABBCollider(new Vec2(250, 20), new Vec2(250, 20));
+
+    engine.physics.addRigidBody(rRb);
+
     function createCircle(radius, color, mass) {
       const bmd = engine.create.bitmap(300, 300);
       const spr = engine.add(engine.create.sprite(bmd));
@@ -66,19 +78,7 @@ export default class GameState extends State {
     spr2.position.set(500, 300);
 
     spr1.rigidBody.addForceXY(16000, 8000);
-    spr2.rigidBody.addForceXY(-4000, 2000);
-
-    const r = engine.add(new Rectangle());
-
-    // r.pivot.set(50, 50);
-    r.position.set(440, 350);
-
-    const rRb = r.rigidBody = new RigidBody(r);
-
-    rRb.mass = 0;
-    rRb.collider = new AABBCollider(new Vec2(50), new Vec2(50));
-
-    engine.physics.addRigidBody(rRb);
+    spr2.rigidBody.addForceXY(-4000 * 0, 2000);
 
     engine.time.events.once(500, () => {
       const sprite = engine.create.sprite('test');
@@ -133,7 +133,7 @@ export default class GameState extends State {
 class Rectangle extends Renderable {
   render(ctx) {
     ctx.fillStyle = 'yellow';
-    ctx.fillRect(0, 0, 100, 100);
+    ctx.fillRect(0, 0, 500, 40);
   }
 
   fixedUpdate() {
