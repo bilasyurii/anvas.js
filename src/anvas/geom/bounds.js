@@ -211,8 +211,8 @@ export default class Bounds {
 
   addVec2(v) {
     this.minX = Math2.min(this.minX, v.x);
-    this.minY = Math2.min(this.minY, v.x);
-    this.maxX = Math2.max(this.maxX, v.y);
+    this.minY = Math2.min(this.minY, v.y);
+    this.maxX = Math2.max(this.maxX, v.x);
     this.maxY = Math2.max(this.maxY, v.y);
 
     return this;
